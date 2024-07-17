@@ -1,0 +1,359 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en">
+<head>
+    <title>Getting Started</title>
+    <!-- add one of the jQWidgets styles -->
+    <link rel="stylesheet" 
+    href="../../jqwidgets/styles/jqx.base.css" type="text/css" />
+    <link rel="stylesheet" 
+    href="../../jqwidgets/styles/jqx.darkblue.css" type="text/css" />
+    <!-- add the jQuery script -->
+    <script type="text/javascript" src="../../scripts/jquery-1.11.1.min.js"></script>
+    <!-- add the jQWidgets framework -->
+    <script type="text/javascript" src="../../jqwidgets/jqxcore.js"></script>
+    <!-- add one or more widgets -->
+    <script type="text/javascript" src="../../jqwidgets/jqxbuttons.js"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2FX5PV9DNT"></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-2FX5PV9DNT');</script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 900px; /* Увеличиваем ширину контейнера */
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #dcd2cf;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .container h3 {
+            margin-top: 0;
+            padding: 10px;
+            background-color: #e8e8e8;
+            border-radius: 4px 4px 0 0;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            margin-bottom: 5px;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+        .form-group input[type="checkbox"] {
+            width: auto;
+        }
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        .form-actions button {
+            margin-left: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        .form-actions button.cancel {
+            background-color: #6c757d;
+        }
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px; /* Добавляем промежуток между элементами */
+        }
+        .flex-item {
+            flex: 1 1 calc(33.33% - 20px); /* Три элемента в ряд с промежутками */
+            display: flex;
+            flex-direction: column;
+        }
+        .checkbox-group{
+            display: inline;
+        }
+        .checkbox-group .objectClosed{
+            margin-left:20px;
+            display: inline-block;
+        }
+        .checkbox-group .checkbox{
+            display: inline;
+            align-self: flex-start;
+        }
+        .inline-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 20px;
+        }
+        .inline-group .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group .name{
+            margin-left:1px;
+        }
+    </style>
+
+    <script language="JavaScript">
+        document.addEventListener("DOMContentLoaded", function() {
+    // Объект с данными
+    const Obj = {
+        "nodeId": 4000021,
+        "volumeName": "Папка 11",
+        "volumeNum": "11",
+        "year": "2021",
+        "dateFrom": "01.07.2021",
+        "dateTo": null,
+        "volumeClosed": "0",
+        "storageType": "Библиотечный",
+        "locatorType": "Книжная полка 75",
+        "sheetsPlan": "75",
+        "sheetsFact": null,
+        "docsPlan": null,
+        "docsFact": null,
+        "comment": null
+    };
+
+    // Массивы данных
+    let StorageFormatData = [
+        { text: "Книжный шкаф 400", value: "1", quantity: "400" },
+        { text: "Книжный шкаф 350", value: "2", quantity: "350" },
+        { text: "ЭЛЕКТРОННАЯ ПОЛКА", value: "3", quantity: "25" },
+        { text: "Книжная полка 75", value: "4", quantity: "75" },
+        { text: "Книжная полка 50", value: "5", quantity: "50" },
+        { text: "Книжная полка 150", value: "6", quantity: "150" }
+    ];
+
+    let StorageTypeData = [
+        { text: "Библиотечный", value: "1" },
+        { text: "Электронный", value: "2" }
+    ];
+
+    // Получаем элементы формы
+    const elements = {
+        objectClosedCheckbox: document.getElementById("objectClosed"),
+        statusInput: document.getElementById("status"),
+        dateToInput: document.getElementById("date-to"),
+        storageTypeInput: document.getElementById("storageType"),
+        storageFormatInput: document.getElementById("storageFormat"),
+        groupInput: document.getElementById("group"),
+        sheetsPlanInput: document.getElementById("sheetsPlan"),
+        sheetsFactInput: document.getElementById("sheetsFact"),
+        docsPlanInput: document.getElementById("docsPlan"),
+        cancelButton: document.getElementById("cancelButton"),
+        updateButton: document.getElementById("updateButton")
+    };
+
+
+    // Функция для установки сегодняшней даты
+    function setTodayDate() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    // Функция для обновления состояния формы
+    function updateForm() {
+        if (elements.objectClosedCheckbox.checked) {
+            elements.statusInput.value = "Закрыт";
+            elements.dateToInput.value = setTodayDate();
+            elements.storageTypeInput.disabled = true;
+            elements.storageFormatInput.disabled = true;
+        } else {
+            elements.statusInput.value = "Открыт";
+            elements.dateToInput.value = "";
+            elements.storageTypeInput.disabled = false;
+            elements.storageFormatInput.disabled = false;
+        }
+        // Обновляем значение поля "Группа"
+        elements.groupInput.value = elements.storageTypeInput.value;
+    }
+
+    // Функция для загрузки данных из объекта в форму
+    function loadDataToForm(data) {
+        elements.objectClosedCheckbox.checked = data.volumeClosed === "1";
+        elements.statusInput.value = data.volumeClosed === "1" ? "Закрыт" : "Открыт";
+        elements.dateToInput.value = data.dateTo ? data.dateTo.split('.').reverse().join('-') : ""; // Преобразуем дату в формат YYYY-MM-DD
+        elements.storageTypeInput.value = data.storageType;
+        elements.storageFormatInput.value = data.locatorType;
+        elements.groupInput.value = data.storageType;
+        elements.sheetsPlanInput.value = data.sheetsPlan;
+        elements.sheetsFactInput.value = data.sheetsFact;
+        elements.docsPlanInput.value = data.docsPlan;
+    }
+
+    // Функция для создания нового объекта на основе данных формы
+    function createUpdatedObject() {
+        const newObj = {
+            nodeId: Obj.nodeId,
+            volumeName: Obj.volumeName,
+            volumeNum: Obj.volumeNum,
+            year: Obj.year,
+            dateFrom: Obj.dateFrom,
+            dateTo: elements.dateToInput.value ? elements.dateToInput.value.split('-').reverse().join('.') : null, // Преобразуем дату в формат DD.MM.YYYY
+            volumeClosed: elements.statusInput.value === "Закрыт" ? "1" : "0",
+            storageType: elements.storageTypeInput.value,
+            locatorType: elements.storageFormatInput.value,
+            sheetsPlan: elements.sheetsPlanInput.value,
+            sheetsFact: elements.sheetsFactInput.value,
+            docsPlan: elements.docsPlanInput.value,
+            docsFact: Obj.docsFact,
+            comment: Obj.comment
+        };
+        return newObj;
+    }
+
+    // Обработчик для кнопки "Отменить"
+    elements.cancelButton.addEventListener("click", function() {
+        loadDataToForm(Obj);
+        updateForm();
+    });
+
+    // Обработчик для кнопки "Обновить"
+    elements.updateButton.addEventListener("click", function() {
+        const updatedObj = createUpdatedObject();
+        console.log("Обновленный объект:", updatedObj);
+    });
+
+    // Добавляем обработчик события изменения для чекбокса
+    elements.objectClosedCheckbox.addEventListener("change", updateForm);
+
+    // Добавляем обработчик события изменения для поля "Тип хранения"
+    elements.storageTypeInput.addEventListener("input", function() {
+        const selectedStorageType = elements.storageTypeInput.value;
+        const electronicShelf = StorageFormatData.find(item => item.text === "ЭЛЕКТРОННАЯ ПОЛКА");
+
+        if (selectedStorageType === "Электронный") {
+            elements.storageFormatInput.value = electronicShelf.text;
+            elements.storageFormatInput.disabled = true;
+            elements.docsPlanInput.value = 100; // Пример значения для "ЭЛЕКТРОННАЯ ПОЛКА"
+            elements.sheetsPlanInput.value = "";
+            elements.sheetsFactInput.value = "";
+        } else {
+            elements.storageFormatInput.disabled = false;
+        }
+        elements.groupInput.value = selectedStorageType;
+    });
+
+    // Инициализируем форму при загрузке страницы
+    loadDataToForm(Obj);
+    updateForm();
+});
+    </script>
+</head>
+<body>
+
+<div class="container">
+    <h3>Атрибуты</h3>
+    <div class="flex-container">
+        <div class="flex-item">
+            <div class="form-group">
+                <label for="name">Наименование:</label>
+                <input type="text" id="name" name="name" value="Папка 11" disabled>
+            </div>
+        </div>
+        <div class="flex-item">
+            <div class="form-group">
+                <label for="number">Номер:</label>
+                <input type="text" id="number" name="number" value="11" disabled>
+            </div>
+        </div>
+        <div class="flex-item">
+            <div class="form-group">
+                <label for="year">Год:</label>
+                <input type="text" id="year" name="year" value="2021" disabled>
+            </div>
+        </div>
+        <div class="inline-group">
+            <div class="form-group">
+                <label for="date-from">Дата с:</label>
+                <input type="date" id="date-from" name="date-from" value="2021-07-01" disabled>
+            </div>
+            <div class="form-group">
+                <label for="date-to">Дата по:</label>
+                <input type="date" id="date-to" name="date-to" disabled>
+            </div>
+            <div class="form-group">
+                <label for="status">Состояние:</label>
+                <input type="text" id="status" name="status" value="Открыт" readonly>
+            </div>
+            <div class="form-group checkbox-group">
+                <input class="checkbox"type="checkbox" id="objectClosed" name="closed">
+                <label class="objectClosed"for="closed">Объект закрыт</label>
+            </div>
+        </div>
+        <div class="flex-item">
+            <div class="form-group">
+                <label for="storage-type">Тип хранения:</label>
+                <select id="storageType" name="storage-type">
+                    <option value="Библиотечный" selected>Библиотечный</option>
+                    <option value="Электронный">Электронный</option>
+                </select>
+            </div>
+        </div>
+        <div class="flex-item">
+            <div class="form-group">
+                <label for="storage-format">Формат хранения:</label>
+                <select id="storageFormat" name="storage-format">
+                    <option value="1" data-quantity="400">Книжный шкаф 400</option>
+                    <option value="2" data-quantity="350">Книжный шкаф 350</option>
+                    <option value="3" data-quantity="25">ЭЛЕКТРОННАЯ ПОЛКА</option>
+                    <option value="bookshelf" selected>Книжная полка 75</option>
+                    <option value="5" data-quantity="50">Книжная полка 50</option>
+                    <option value="6" data-quantity="150">Книжная полка 150</option>
+                </select>
+            </div>
+        </div>
+        <div class="flex-item">
+            <div class="form-group">
+                <label for="group">Группа:</label>
+                <input type="text" id="group" name="group" readonly>
+            </div>
+        </div>
+        <div class="inline-group">
+            <div class="form-group">
+                <label for="document-plan">Количество документов план:</label>
+                <input type="text" id="docsPlan" name="document-plan">
+            </div>
+            <div class="form-group">
+                <label for="document-fact">Количество документов факт:</label>
+                <input type="text" id="document-fact" name="document-fact">
+            </div>
+            <div class="form-group">
+                <label for="sheets-plan">Количество листов план:</label>
+                <input type="text" id="sheetsPlan" name="sheets-plan" value="75">
+            </div>
+            <div class="form-group">
+                <label for="sheets-fact">Количество листов факт:</label>
+                <input type="text" id="sheetsFact" name="sheets-fact">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="comments">Комментарии:</label>
+        <textarea id="comments" name="comments" rows="4">test comment
+test comment
+test comment</textarea>
+    </div>
+    <div class="form-actions">
+        <button id="updateButton" type="submit">Обновить</button>
+        <button id="cancelButton" type="button" class="cancel">Отменить</button>
+    </div>
+</div>
+
+</body>
+</html>
